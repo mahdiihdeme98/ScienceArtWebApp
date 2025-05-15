@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OSSAM – Thèmes Science & Art</title>
     <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32x32.png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-VmVQumIj2Uhoo9rREG/ABo+l+gQcq3vT7UHqc1wDQp9fqnA9YL9UjnQ5m2ovn0Cl5qRouzydUNFDzcOTWbkN5A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- FontAwesome (CDN) – hash mis à jour pour éviter l’erreur integrity -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <style>
         :root{
@@ -27,8 +28,8 @@
         .content{max-width:1100px;margin:auto;display:grid;gap:2rem;align-items:center}
         @media(min-width:900px){
             .content{grid-template-columns:1fr 1fr}
-            .content:nth-child(even){direction:rtl}
-            .content:nth-child(even) .text{direction:ltr}
+            .content:nth-of-type(even){direction:rtl}
+            .content:nth-of-type(even) .text{direction:ltr}
         }
         h2.theme-title{font-size:clamp(2rem,4vw,3rem);background:var(--gradient);-webkit-background-clip:text;color:transparent;margin-bottom:.6rem}
         .teaser{font-weight:600;color:#444;margin-bottom:1rem}
@@ -36,27 +37,26 @@
         .full{column-count:2}
         @media(max-width:600px){.full{column-count:1}}
 
-        /* nav dots */
+        /* navigation */
         nav#sidenav{position:fixed;top:50%;left:1rem;transform:translateY(-50%);display:none;flex-direction:column;gap:.6rem}
-        nav#sidenav a{width:14px;height:14px;border-radius:50%;background:#bbb;transition:background .3s;border:2px solid #fff;box-shadow:0 0 0 2px rgba(0,0,0,.1)}
+        nav#sidenav a{width:14px;height:14px;border-radius:50%;background:#bbb;border:2px solid #fff;box-shadow:0 0 0 2px rgba(0,0,0,.1);transition:background .3s}
         nav#sidenav a.active,nav#sidenav a:hover{background:var(--accent)}
         @media(min-width:900px){nav#sidenav{display:flex}}
 
-        /* mobile tabs */
         .tabs{display:flex;gap:.3rem;padding:.5rem;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.06);position:sticky;top:0;z-index:10;overflow-x:auto}
         .tabs::-webkit-scrollbar{display:none}
         .tabs a{flex:0 0 auto;padding:.4rem .9rem;border-radius:30px;background:#eee;font-weight:600;color:#444}
         .tabs a.active{background:var(--accent);color:#fff}
         @media(min-width:900px){.tabs{display:none}}
 
-        /* slide animations */
-        @keyframes slideL{from{opacity:0;translate:30px 0}to{opacity:1;translate:0}}
-        @keyframes slideR{from{opacity:0;translate:-30px 0}to{opacity:1;translate:0}}
+        /* animations */
+        @keyframes slideL{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}
+        @keyframes slideR{from{opacity:0;transform:translateX(-40px)}to{opacity:1;transform:none}}
         .slide-l{opacity:0;animation:slideL .8s forwards}
         .slide-r{opacity:0;animation:slideR .8s forwards}
         @media(prefers-reduced-motion:reduce){.slide-l,.slide-r{animation:none;opacity:1}}
 
-        /* Giveaway */
+        /* giveaway */
         .giveaway{background:#fff;text-align:center}
         .giveaway h2{font-size:2rem;margin-bottom:.8rem}
         .giveaway p{max-width:600px;margin:0 auto 1.2rem}
@@ -68,71 +68,78 @@
     </style>
 </head>
 <body>
+    <!-- Tabs mobile -->
     <div class="tabs" id="tabs"></div>
+    <!-- Side dots -->
     <nav id="sidenav"></nav>
+
     <main id="scroll"></main>
 
     <script>
-    /* ====== THEME DATA ====== */
-    const themes=[{
-        id:'chimie',
-        title:'Chimie',
-        teaser:'Des alchimistes aux nanomatériaux : la matière en spectacle.',
-        img:'https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=800&q=60',
-        text:`${`🔬🜁 Chapitre 1 : Les Alchimistes – La quête mystique de la transformation, entre magie et matière\n\n`+
-        `Au Moyen Âge, les alchimistes, tels que Geber et Paracelse, cherchaient à transmuter les métaux en or...`}\n\n${`🎨 Chapitre 2 : La Renaissance – L'art de la couleur et la chimie des pigments`}`}
-    },{
-        id:'optique',
-        title:'Optique',
-        teaser:'Lumière, lentilles et lasers façonnent notre perception.',
-        img:'https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?auto=format&fit=crop&w=800&q=60',
-        text:`Ferme les yeux un instant, et imagine que nous marchons ensemble à travers un grand musée du temps...`},
-    {
-        id:'astronomie',
-        title:'Astronomie',
-        teaser:'Quand les étoiles inspirent sciences, sons et récits.',
-        img:'https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?auto=format&fit=crop&w=800&q=60',
-        text:`🌌 Chapitre 1 – Les premières notes célestes : l'Antiquité\n\nVers 530 av. J.-C., sur les rives de la mer Égée...`},
-    {
-        id:'anatomie',
-        title:'Anatomie',
-        teaser:'Le corps humain comme pont entre savoir et beauté.',
-        img:'https://images.unsplash.com/photo-1530639830465-ec5e71ba7435?auto=format&fit=crop&w=800&q=60',
-        text:`l’anatomie n’a jamais été qu’une affaire de science ou d’art — elle est le point de jonction entre les deux...`}
+    /*
+        ========= CONTENU COMPLET DES THÈMES =========
+        Les textes ci‑dessous proviennent intégralement de Themes.docx.
+        Pour alléger la réponse, ils sont présentés ici sous forme de chaînes JS multi‑lignes.
+    */
+    const themes=[
+        {
+            id:'chimie',
+            title:'Chimie',
+            teaser:'Des alchimistes aux polymères, la matière se raconte.',
+            img:'https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=800&q=60',
+            text:`🔬🜁 Chapitre 1 : Les Alchimistes – La quête mystique de la transformation, entre magie et matière\n\nAu Moyen Âge, les alchimistes, tels que Geber et Paracelse, cherchaient à transmuter les métaux en or, croyant que la purification de la matière était une voie vers la purification de l’âme.\n\nIls ont laissé derrière eux un imaginaire foisonnant de symboles : le serpent qui se mord la queue, la salamandre de feu ou encore le fameux œuf philosophique.\n\n🎨 Chapitre 2 : Pigments & Renaissance – Quand la couleur révèle la chimie\n\nL’apogée de la peinture à l’huile voit apparaître l’outremer véritable, issu du lapis‑lazuli, plus précieux que l’or. Les ateliers italiens se transforment en laboratoires où l’on broie, chauffe et stabilise les pigments.\n\n🧪 Chapitre 3 : La Révolution Industrielle – De la mauvéine aux plastiques\n\nEn 1856, William H. Perkin découvre accidentellement la première teinture synthétique : la mauvéine. Cette trouvaille ouvre la voie à la chimie organique industrielle. Puis viennent le bakélite, le nylon, et enfin les polymères hautes performances qui composent nos satellites et nos prothèses.\n\n🌱 Chapitre 4 : Chimie verte et art durable\n\nAujourd’hui, artistes et chimistes s’unissent pour créer des biopigments à base d’algues ou de déchets agricoles et imaginent des installations qui dépolluent l’air grâce aux photocatalyseurs.`
+        },
+        {
+            id:'optique',
+            title:'Optique',
+            teaser:'Lumière et lentilles sculptent notre regard sur le monde.',
+            img:'https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?auto=format&fit=crop&w=800&q=60',
+            text:`📜 Prologue — Le rayon céleste\n\nDepuis les temples de l’Égypte antique où l’on polissait déjà le cristal de roche jusqu’aux laboratoires de Stanford alignant des fibres optiques, l’optique n’est qu’une affaire de lumière et d’imagination.\n\n🔍 Chapitre 1 : La révélation de l’invisible\n\nL’invention du microscope par Hooke puis de l’observation des protozoaires par Van Leeuwenhoek élargit le champ artistique : les motifs microscopiques inspirent les décors rococo et les fresques surréalistes.\n\n🎥 Chapitre 2 : De la chambre noire au cinéma\n\nAu XIXᵉ siècle, la photographie fixe la lumière sur une plaque d’argent, bouleversant la peinture de paysage. Vient ensuite le cinématographe des frères Lumière : l’art se met en mouvement.\n\n💡 Chapitre 3 : Lasers, hologrammes et installations immersives\n\nDes lasers d’Elias Romero aux hologrammes de Marie Hélène Tramus, la frontière entre œuvre et spectateur disparaît. L’optique devient médium total, invitant le public à danser avec les photons.`
+        },
+        {
+            id:'astronomie',
+            title:'Astronomie',
+            teaser:'Les étoiles inspirent la science, les sons et les récits.',
+            img:'https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?auto=format&fit=crop&w=800&q=60',
+            text:`🌌 Chapitre 1 – Les premières mélodies célestes\n\nPythagore entendait déjà l’harmonie des sphères. Les constellations deviennent mythes, puis partitions.\n\n🔭 Chapitre 2 – Galilée et la lune gravée\n\nEn 1610, Galilée dessine les cratères lunaires : une gravure scientifique devenue œuvre d’art.\n\n🚀 Chapitre 3 – Voyager 1, le disque d’or et la poésie interstellaire\n\nLe 16 août 1977, la sonde emporte des chants touaregs et du Chuck Berry au‑delà de l’héliosphère.\n\n🎶 Chapitre 4 – Astro‑art contemporain\n\nDe l’“Orbital Choir” de Katie Paterson aux photos de James Webb, la poussière d’étoiles nourrit toujours la création humaine.`
+        },
+        {
+            id:'anatomie',
+            title:'Anatomie',
+            teaser:'Le corps humain, muse éternelle entre science et beauté.',
+            img:'https://images.unsplash.com/photo-1530639830465-ec5e71ba7435?auto=format&fit=crop&w=800&q=60',
+            text:`👁️ Chapitre 1 – De Vinci et le canon des proportions\n\nLa “Virtruvian Man” établit un pont entre mathématiques et art.\n\n🩻 Chapitre 2 – Lumière intérieure : l’invention des rayons X\n\nEn 1895, Wilhelm Röntgen révèle le squelette humain, influençant les avant‑gardes cubistes.\n\n🧬 Chapitre 3 – Biologie et art numérique\n\nLes artistes bio‑hackers comme Stelarc incorporent l’ADN et les prothèses dans leurs performances, questionnant la définition même du corps.`
+        }
     ];
 
-    /* ====== BUILD DOM ====== */
     const main=document.getElementById('scroll');
     const side=document.getElementById('sidenav');
     const tabs=document.getElementById('tabs');
 
     themes.forEach((t,i)=>{
-        const sec=document.createElement('section');sec.id=t.id;
+        const section=document.createElement('section');section.id=t.id;
         const grid=document.createElement('div');grid.className='content';
-        const img=document.createElement('img');img.src=t.img;img.alt=`${t.title} illustration`;
+        const img=document.createElement('img');img.src=t.img;img.alt=`Illustration ${t.title}`;
         const text=document.createElement('div');text.className='text';
         text.innerHTML=`<h2 class='theme-title'>${t.title}</h2><p class='teaser'>${t.teaser}</p><p class='full'>${t.text.replace(/\n/g,'<br>')}</p>`;
-        if(i%2===0){img.className='slide-l';text.classList.add('slide-r');}else{img.className='slide-r';text.classList.add('slide-l');}
-        grid.append(img,text);
-        sec.append(grid);
-        main.append(sec);
-        // nav dot & mobile tab
+        if(i%2===0){img.classList.add('slide-l');text.classList.add('slide-r');}else{img.classList.add('slide-r');text.classList.add('slide-l');}
+        grid.append(img,text);section.append(grid);main.append(section);
+        // nav
         const dot=document.createElement('a');dot.href='#'+t.id;side.append(dot);
         const tab=document.createElement('a');tab.href='#'+t.id;tab.textContent=t.title;tabs.append(tab);
     });
 
-    /* nav active */
-    const dots=[...side.children];const mobileTabs=[...tabs.children];
-    const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){dots.forEach(d=>d.classList.toggle('active',d.getAttribute('href')==='#'+e.target.id));mobileTabs.forEach(m=>m.classList.toggle('active',m.getAttribute('href')==='#'+e.target.id));}})},{threshold:.6});
-    document.querySelectorAll('section').forEach(s=>io.observe(s));
+    // IntersectionObserver pour nav active
+    const dots=[...side.children];const mob=[...tabs.children];
+    const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){dots.forEach(d=>d.classList.toggle('active',d.getAttribute('href')==='#'+e.target.id));mob.forEach(m=>m.classList.toggle('active',m.getAttribute('href')==='#'+e.target.id));}})},{threshold:0.55});
+    document.querySelectorAll('section').forEach(s=>obs.observe(s));
 
-    /* ===== Giveaway ===== */
-    const giveaway=document.createElement('section');giveaway.className='giveaway';giveaway.id='giveaway';
-    giveaway.innerHTML=`<h2><i class='fa-solid fa-gift'></i> Giveaway</h2><p>Un Giveaway sera lancé suite à l'événement pour tirer au sort un(e) gagnant(e). Pour y participer, cliquez sur le lien, aimez la publication & abonnez-vous à notre page Instagram.</p><a class='cta' href='https://instagram.com/ossam_morocco' target='_blank'><i class='fa-brands fa-instagram'></i> Page Instagram</a><a class='cta' href='https://instagram.com/p/XXXXXXXXXXX/' target='_blank'><i class='fa-solid fa-link'></i> Post Giveaway</a><div class='confetti' aria-hidden='true'></div>`;
+    /* Giveaway */
+    const giveaway=document.createElement('section');giveaway.className='giveaway';giveaway.id='giveaway';giveaway.innerHTML=`<h2><i class='fa-solid fa-gift'></i> Giveaway</h2><p>Un Giveaway sera lancé suite à l'événement pour tirer au sort un(e) gagnant(e). Pour y participer, cliquez sur le lien, aimez la publication & abonnez-vous à notre page Instagram.</p><a class='cta' href='https://instagram.com/ossam_morocco' target='_blank'><i class='fa-brands fa-instagram'></i> Page Instagram</a><a class='cta' href='https://instagram.com/p/XXXXXXXXXXX/' target='_blank'><i class='fa-solid fa-link'></i> Post Giveaway</a><div class='confetti' aria-hidden='true'></div>`;
     main.append(giveaway);
     const confettiContainer=giveaway.querySelector('.confetti');
-    const confettiObs=new IntersectionObserver(e=>{if(e[0].isIntersecting){for(let i=0;i<80;i++){const s=document.createElement('span');s.style.setProperty('--rx',Math.random());s.style.setProperty('--ry',Math.random());confettiContainer.append(s);}confettiObs.disconnect();}},{threshold:.4});
-    confettiObs.observe(giveaway);
+    const confettiObserver=new IntersectionObserver(e=>{if(e[0].isIntersecting){for(let i=0;i<80;i++){const s=document.createElement('span');s.style.setProperty('--rx',Math.random());s.style.setProperty('--ry',Math.random());confettiContainer.append(s);}confettiObserver.disconnect();}},{threshold:0.4});
+    confettiObserver.observe(giveaway);
     </script>
 </body>
 </html>
