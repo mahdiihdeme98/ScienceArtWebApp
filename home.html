@@ -1,0 +1,139 @@
+<!-- === home.html (full file) === -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSSAM – Thèmes Science & Art</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32x32.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-VmVQumIj2Uhoo9rREG/ABo+l+gQcq3vT7UHqc1wDQp9fqnA9YL9UjnQ5m2ovn0Cl5qRouzydUNFDzcOTWbkN5A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+        :root{
+            --accent:#006233;
+            --neutral:#f4f4f4;
+            --neutral-dark:#e6e6e6;
+            --text:#333;
+            --gradient:linear-gradient(90deg,var(--accent),#c8a165);
+        }
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        html{scroll-behavior:smooth}
+        body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:var(--neutral);color:var(--text);line-height:1.6;overflow-x:hidden}
+        a{color:inherit;text-decoration:none}
+        img{max-width:100%;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.1)}
+
+        main{scroll-snap-type:y mandatory;overflow-y:scroll;height:100vh}
+        section{scroll-snap-align:start;min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:4rem 1rem;position:relative}
+        .content{max-width:1100px;margin:auto;display:grid;gap:2rem;align-items:center}
+        @media(min-width:900px){
+            .content{grid-template-columns:1fr 1fr}
+            .content:nth-child(even){direction:rtl}
+            .content:nth-child(even) .text{direction:ltr}
+        }
+        h2.theme-title{font-size:clamp(2rem,4vw,3rem);background:var(--gradient);-webkit-background-clip:text;color:transparent;margin-bottom:.6rem}
+        .teaser{font-weight:600;color:#444;margin-bottom:1rem}
+        .text p{column-gap:2rem;text-align:justify}
+        .full{column-count:2}
+        @media(max-width:600px){.full{column-count:1}}
+
+        /* nav dots */
+        nav#sidenav{position:fixed;top:50%;left:1rem;transform:translateY(-50%);display:none;flex-direction:column;gap:.6rem}
+        nav#sidenav a{width:14px;height:14px;border-radius:50%;background:#bbb;transition:background .3s;border:2px solid #fff;box-shadow:0 0 0 2px rgba(0,0,0,.1)}
+        nav#sidenav a.active,nav#sidenav a:hover{background:var(--accent)}
+        @media(min-width:900px){nav#sidenav{display:flex}}
+
+        /* mobile tabs */
+        .tabs{display:flex;gap:.3rem;padding:.5rem;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.06);position:sticky;top:0;z-index:10;overflow-x:auto}
+        .tabs::-webkit-scrollbar{display:none}
+        .tabs a{flex:0 0 auto;padding:.4rem .9rem;border-radius:30px;background:#eee;font-weight:600;color:#444}
+        .tabs a.active{background:var(--accent);color:#fff}
+        @media(min-width:900px){.tabs{display:none}}
+
+        /* slide animations */
+        @keyframes slideL{from{opacity:0;translate:30px 0}to{opacity:1;translate:0}}
+        @keyframes slideR{from{opacity:0;translate:-30px 0}to{opacity:1;translate:0}}
+        .slide-l{opacity:0;animation:slideL .8s forwards}
+        .slide-r{opacity:0;animation:slideR .8s forwards}
+        @media(prefers-reduced-motion:reduce){.slide-l,.slide-r{animation:none;opacity:1}}
+
+        /* Giveaway */
+        .giveaway{background:#fff;text-align:center}
+        .giveaway h2{font-size:2rem;margin-bottom:.8rem}
+        .giveaway p{max-width:600px;margin:0 auto 1.2rem}
+        .cta{display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 1.6rem;margin:.5rem;background:var(--accent);color:#fff;border-radius:40px;font-weight:600;transition:transform .3s}
+        .cta:hover{transform:scale(1.05)}
+        .confetti{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+        .confetti span{position:absolute;width:8px;height:8px;background:var(--accent);top:50%;left:50%;animation:confetti 1.2s ease-out forwards;opacity:0}
+        @keyframes confetti{to{opacity:1;transform:translate(calc(-50vw + 100vw*var(--rx)),calc(-50vh + 100vh*var(--ry))) rotate(720deg)}}
+    </style>
+</head>
+<body>
+    <div class="tabs" id="tabs"></div>
+    <nav id="sidenav"></nav>
+    <main id="scroll"></main>
+
+    <script>
+    /* ====== THEME DATA ====== */
+    const themes=[{
+        id:'chimie',
+        title:'Chimie',
+        teaser:'Des alchimistes aux nanomatériaux : la matière en spectacle.',
+        img:'https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=800&q=60',
+        text:`${`🔬🜁 Chapitre 1 : Les Alchimistes – La quête mystique de la transformation, entre magie et matière\n\n`+
+        `Au Moyen Âge, les alchimistes, tels que Geber et Paracelse, cherchaient à transmuter les métaux en or...`}\n\n${`🎨 Chapitre 2 : La Renaissance – L'art de la couleur et la chimie des pigments`}`}
+    },{
+        id:'optique',
+        title:'Optique',
+        teaser:'Lumière, lentilles et lasers façonnent notre perception.',
+        img:'https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?auto=format&fit=crop&w=800&q=60',
+        text:`Ferme les yeux un instant, et imagine que nous marchons ensemble à travers un grand musée du temps...`},
+    {
+        id:'astronomie',
+        title:'Astronomie',
+        teaser:'Quand les étoiles inspirent sciences, sons et récits.',
+        img:'https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?auto=format&fit=crop&w=800&q=60',
+        text:`🌌 Chapitre 1 – Les premières notes célestes : l'Antiquité\n\nVers 530 av. J.-C., sur les rives de la mer Égée...`},
+    {
+        id:'anatomie',
+        title:'Anatomie',
+        teaser:'Le corps humain comme pont entre savoir et beauté.',
+        img:'https://images.unsplash.com/photo-1530639830465-ec5e71ba7435?auto=format&fit=crop&w=800&q=60',
+        text:`l’anatomie n’a jamais été qu’une affaire de science ou d’art — elle est le point de jonction entre les deux...`}
+    ];
+
+    /* ====== BUILD DOM ====== */
+    const main=document.getElementById('scroll');
+    const side=document.getElementById('sidenav');
+    const tabs=document.getElementById('tabs');
+
+    themes.forEach((t,i)=>{
+        const sec=document.createElement('section');sec.id=t.id;
+        const grid=document.createElement('div');grid.className='content';
+        const img=document.createElement('img');img.src=t.img;img.alt=`${t.title} illustration`;
+        const text=document.createElement('div');text.className='text';
+        text.innerHTML=`<h2 class='theme-title'>${t.title}</h2><p class='teaser'>${t.teaser}</p><p class='full'>${t.text.replace(/\n/g,'<br>')}</p>`;
+        if(i%2===0){img.className='slide-l';text.classList.add('slide-r');}else{img.className='slide-r';text.classList.add('slide-l');}
+        grid.append(img,text);
+        sec.append(grid);
+        main.append(sec);
+        // nav dot & mobile tab
+        const dot=document.createElement('a');dot.href='#'+t.id;side.append(dot);
+        const tab=document.createElement('a');tab.href='#'+t.id;tab.textContent=t.title;tabs.append(tab);
+    });
+
+    /* nav active */
+    const dots=[...side.children];const mobileTabs=[...tabs.children];
+    const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){dots.forEach(d=>d.classList.toggle('active',d.getAttribute('href')==='#'+e.target.id));mobileTabs.forEach(m=>m.classList.toggle('active',m.getAttribute('href')==='#'+e.target.id));}})},{threshold:.6});
+    document.querySelectorAll('section').forEach(s=>io.observe(s));
+
+    /* ===== Giveaway ===== */
+    const giveaway=document.createElement('section');giveaway.className='giveaway';giveaway.id='giveaway';
+    giveaway.innerHTML=`<h2><i class='fa-solid fa-gift'></i> Giveaway</h2><p>Un Giveaway sera lancé suite à l'événement pour tirer au sort un(e) gagnant(e). Pour y participer, cliquez sur le lien, aimez la publication & abonnez-vous à notre page Instagram.</p><a class='cta' href='https://instagram.com/ossam_morocco' target='_blank'><i class='fa-brands fa-instagram'></i> Page Instagram</a><a class='cta' href='https://instagram.com/p/XXXXXXXXXXX/' target='_blank'><i class='fa-solid fa-link'></i> Post Giveaway</a><div class='confetti' aria-hidden='true'></div>`;
+    main.append(giveaway);
+    const confettiContainer=giveaway.querySelector('.confetti');
+    const confettiObs=new IntersectionObserver(e=>{if(e[0].isIntersecting){for(let i=0;i<80;i++){const s=document.createElement('span');s.style.setProperty('--rx',Math.random());s.style.setProperty('--ry',Math.random());confettiContainer.append(s);}confettiObs.disconnect();}},{threshold:.4});
+    confettiObs.observe(giveaway);
+    </script>
+</body>
+</html>
+<!-- === /home.html end === -->
