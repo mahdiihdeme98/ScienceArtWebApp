@@ -3,140 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSSAM – Science&nbsp;&amp;&nbsp;Art</title>
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-    <script>
-        (function () {
-          const isMobile = window.innerWidth <= 768 ||
-                           /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i
-                             .test(navigator.userAgent);
-          if (isMobile && !location.pathname.endsWith('mobile.html')) {
-            // prevents endless loop if user already on mobile page
-            location.replace('mobile.html');
-          }
-        })();
-      </script>      
-    <title>Home - Science&Art</title>
+
+    <!-- FontAwesome 6 Free CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-VmVQumIj2Uhoo9rREG/ABo+l+gQcq3vT7UHqc1wDQp9fqnA9YL9UjnQ5m2ovn0Cl5qRouzydUNFDzcOTWbkN5A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+        /* ===== CSS variables & resets ===== */
+        :root{
+            --accent:#006233;
+            --neutral:#f4f4f4;
+            --neutral-dark:#e6e6e6;
+            --text:#333;
         }
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        html{scroll-behavior:smooth}
+        body{
+            font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+            background:var(--neutral);
+            color:var(--text);
+            line-height:1.6;
+            padding:3rem 1rem;
+        }
+        img{max-width:100%;display:block;border-radius:8px}
+        a{color:inherit;text-decoration:none}
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f4f4;
-            text-align: center;
-            padding: 50px;
+        /* ===== Layout ===== */
+        .container{
+            max-width:900px;
+            margin-inline:auto;
+            background:#fff;
+            padding:2.5rem;
+            border-radius:12px;
+            box-shadow:0 4px 10px rgba(0,0,0,.08);
+            text-align:center;
         }
+        .logo{max-width:200px;margin-inline:auto 1rem 1rem auto}
 
-        .container {
-            max-width: 900px;
-            margin: auto;
-            background: white;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-        }
+        h1{font-size:1.9rem;margin-bottom:.8rem}
+        p{font-size:1.05rem;margin-bottom:1.2rem;color:#555}
 
-        .logo {
-            max-width: 200px;
-            margin-bottom: 20px;
+        .start-button{
+            display:inline-block;
+            padding:.75rem 1.5rem;
+            background:var(--accent);
+            color:#fff;
+            border-radius:6px;
+            font-size:1.05rem;
+            transition:background .25s;
         }
+        .start-button:hover{background:#004d1a}
 
-        h1 {
-            font-size: 28px;
-            margin-bottom: 15px;
+        .section{
+            margin-top:2.5rem;
+            padding-top:1.25rem;
+            border-top:2px solid var(--neutral-dark);
+            text-align:left;
         }
+        .section h2{font-size:1.5rem;margin-bottom:.75rem}
 
-        p {
-            font-size: 18px;
-            color: #555;
-            margin-bottom: 20px;
-            line-height: 1.5;
-        }
+        /* ===== Festival des sciences block ===== */
+        .festival-img{transition:transform .4s ease;cursor:pointer}
+        .festival-img:hover{transform:scale(1.05)}
 
-        .start-button {
-            display: inline-block;
-            padding: 12px 20px;
-            font-size: 18px;
-            color: white;
-            background-color: #006233;
-            border: none;
-            border-radius: 5px;
-            text-decoration: none;
-            transition: 0.3s;
-            margin-top: 10px;
-        }
+        /* fadeUp animation */
+        @keyframes fadeUp{from{opacity:0;translate:0 40px}to{opacity:1;translate:0 0}}
+        .fade-up{opacity:0;animation:fadeUp .7s forwards}
+        @media(prefers-reduced-motion:reduce){.fade-up{animation:none;opacity:1}}
 
-        .start-button:hover {
-            background-color: #004d1a;
-        }
-
-        .section {
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 2px solid #ddd;
-            text-align: left;
-        }
-
-        .section h2 {
-            font-size: 24px;
-            color: #333;
-            margin-bottom: 10px;
-        }
-
-        .values-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            margin-top: 20px;
-        }
-
-        .values-container img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-        }
     </style>
 </head>
 <body>
+    <header class="container">
+        <img src="assets/img/logo-ossam.png" alt="Logo OSSAM" class="logo">
+        <h1>Bienvenue sur OSSAM – Quand la science rencontre l’art</h1>
+        <p>Explorez les ponts inattendus entre découvertes scientifiques et créations artistiques.</p>
+        <a href="home.html" class="start-button">Découvrir&nbsp;les&nbsp;thèmes</a>
+    </header>
 
-    <div class="container">
-        <!-- Logo (Replace 'logo.png' with your actual logo file) -->
-        <img src="assets/img/Logo_Ocre.png" alt="Organisation Logo" class="logo">
+    <!-- ===== Festival des sciences Section ===== -->
+    <section class="container section fade-up" id="festival">
+        <h2><i class="fa-solid fa-flask-vial" style="color:var(--accent);"></i>&nbsp;Festival des sciences</h2>
+        <p>Le Festival Des Sciences est une journée dédiée à l'exploration, à la découverte et à la célébration de la science. Organisée par le club <strong>FDS EHTP Casa</strong> depuis 2016, elle offre une diversité d'activités interactives destinées à un public de tous âges. Parmi celles-ci se trouvent des démonstrations scientifiques, des ateliers pratiques couvrant différentes thématiques. <strong>OSSAM</strong> y participe cette année avec la thématique de corrélation entre art et science.</p>
+        <img src="assets/img/festival.jpg" alt="Enfants découvrant la science au Festival" class="festival-img" loading="lazy">
+    </section>
 
-        <!-- Welcome Message -->
-        <h1>Bienvenue sur la plateforme Science&Art</h1>
-        <p>
-            Cette plateforme vise à fournir une meilleure compréhension des liens entre 
-            la <strong>Science</strong> et <strong>l'Art</strong> à travers les époques. 
-        </p>
+    <!-- ===== Qui sommes-nous Section (existing content placeholder) ===== -->
+    <section class="container section" id="about">
+        <h2>Qui sommes‑nous&nbsp;?</h2>
+        <p>[… contenu existant …]</p>
+    </section>
 
-        <!-- Button to Navigate to Index -->
-        <a href="home.html" class="start-button">Explorer</a>
-
-        <!-- Qui sommes-nous ? Section -->
-        <div class="section">
-            <h2>Qui sommes-nous ?</h2>
-            <p>
-                <strong>OSSAM</strong> est une initiative portée par des jeunes Marocains visant à <strong>reconnecter la science, 
-                l'éducation et l'art</strong> pour façonner un avenir meilleur pour <strong>notre pays</strong>. 
-                En mettant en avant un <strong>référentiel de valeurs solide</strong>, OSSAM agit pour un <strong>Maroc</strong> 
-                où savoir et créativité sont au service du développement.
-            </p>
-        </div>
-
-        <!-- Nos valeurs Section -->
-        <div class="section">
-            <h2>Nos valeurs</h2>
-            <div class="values-container">
-                <img src="assets/img/values.png" alt="Nos Valeurs">
-            </div>
-        </div>
-    </div>
-
+    <script>
+        // IntersectionObserver to trigger fade‑up on scroll
+        const observer=new IntersectionObserver((entries)=>{
+            entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');observer.unobserve(e.target)}})});
+        document.querySelectorAll('.fade-up').forEach(el=>observer.observe(el));
+    </script>
 </body>
 </html>
